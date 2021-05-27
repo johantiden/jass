@@ -1,10 +1,11 @@
 # secret - yet another formatter for pass
 
-## Installation
+## Gettings started
 ### Dependencies
 secret depends on `pass`, `jq` and `yq`, install them first! 
 (TODO: link to dependencies, or just add install command lines here)
 
+### Installation
 ```
 git clone git@github.com:johantiden/secret.git
 
@@ -15,8 +16,7 @@ secret/install-zshrc.sh
 ```
 
 
-
-## Usage
+### Usage
 `secret` uses `pass` to store secrets. You have to first have an active `pass` environment. 
 
 ```
