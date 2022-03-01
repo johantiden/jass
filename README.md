@@ -29,17 +29,15 @@ secret/install-zshrc.sh
 pass init
 ```
 
-### Add
-TODO: Maybe this should be called 'insert' to reflect the naming in `pass`?.
-
-Then add a new entry using. This will interactively ask you for credentials strongly recommended!
+### Insert
+This will interactively ask you for credentials strongly recommended!
 ```
-secret add hello-secret
+secret insert hello-secret
 ```
 
 You can also insert all arguments at once (use with care!)
 ```
-secret add hello-secret2 myuser mypassword
+secret insert hello-secret2 myuser mypassword
 ```
 
 
@@ -57,14 +55,15 @@ myuser
 The whole reason for `secret` to exist is to get a standardised format across the `pass` repo.
 
 Files are structured with the first line being the password. This is to allow interoperability with other tools.
-Line 2-x is a yml file which specifies key: value freely. `secret` helps you to always add a password and a "user" field.
+Line 2 and below is formatted as yml which specifies key: value freely. 
+`secret` helps you to always insert a password and a "user" field.
 From line 2 and on, any yml-compliant data can be added (using `pass edit`) 
 
-TODO: Add a simple helper to add fields
+TODO: Add a simple helper to add fields, or config for what fields to ask for in interactive mode.
 
-You can fetch the whole file using `pass` directly.
+You can fetch the whole file using `pass` directly or
 ```
-$ secret add hello-secret2 myuser mypassword
+$ secret insert hello-secret2 myuser mypassword
 $ pass hello-secret2
 mypassword
 user: myuser
