@@ -2,26 +2,35 @@
 
 ## Gettings started
 ### Dependencies
-secret depends on `pass`, `jq` and `yq`, install them first! 
-(TODO: link to dependencies, or just add install command lines here)
+secret depends on 
+[pass](https://www.passwordstore.org/),
+[jq](https://stedolan.github.io/jq/) and 
+[rq](https://github.com/dflemstr/rq/blob/master/doc/installation.md), 
+install them first! 
 
 ### Installation
 ```
 git clone git@github.com:johantiden/secret.git
-
-# Adds secret/bin to PATH
+```
+Add secret/bin to PATH, run:
+```
+# bash
 secret/install-bashrc.sh
-#OR
+# zsh
 secret/install-zshrc.sh
 ```
 
 
-### Usage
+
+## Usage
 `secret` uses `pass` to store secrets. You have to first have an active `pass` environment. 
 
 ```
 pass init
 ```
+
+### Add
+TODO: Maybe this should be called 'insert' to reflect the naming in `pass`?.
 
 Then add a new entry using. This will interactively ask you for credentials strongly recommended!
 ```
@@ -33,6 +42,8 @@ You can also insert all arguments at once (use with care!)
 secret add hello-secret2 myuser mypassword
 ```
 
+
+### Get
 Get your secrets by calling `secret` with the path of the pass file and the key of the field e.g.
 
 ```
