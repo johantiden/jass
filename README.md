@@ -115,3 +115,7 @@ http://example.com
 johantiden
 ```
 
+## Contributing
+
+Please do! Make a fork and pull request.
+
