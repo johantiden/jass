@@ -5,7 +5,7 @@ CMD="${1}"
 
 function require {
     if ! command -v "${1}" &> /dev/null; then
-        echo "secret requires '${1}' to be installed. Please install it first! See ${2}"
+        echo "jass requires '${1}' to be installed. Please install it first! See ${2}"
         exit
     fi
 }

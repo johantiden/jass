@@ -22,15 +22,20 @@ mypassword
   "url": "http://example.com"
 }
 ```
-
-Or fetch specific values using `secret`
+The format is still compatible with pass. For example, the `-c` flag will only put the first line in the clipboard.
 ```
-$ pass anotherentry
-anotherpassword
-user: anotheruser
-url: http://anotherurl.example.com
-$ secret anotherentry url
-http://anotherurl.example.com
+$ pass -c hello-secret
+Copied hello-secret to clipboard. Will clear in 45 seconds.
+```
+
+Or fetch only the json part using `jass`. The idea here is to use jq extensively to fetch fields, while being able to group data in a single pass file.
+```
+$ jass hello-secret
+{
+  "pass": "mypassword",
+  "user": "johantiden",
+  "url": "http://example.com"
+}
 ```
 
 
@@ -45,14 +50,14 @@ This project is not meant to replace either jq nor pass. It is in fact highly en
 
 ### Installation
 ```
-git clone git@github.com:johantiden/secret.git
+git clone git@github.com:johantiden/jass.git
 ```
-Add secret/bin to PATH, run:
+Add jass/bin to PATH, run:
 ```
 # bash
-secret/install-bashrc.sh
+jass/install-bashrc.sh
 # zsh
-secret/install-zshrc.sh
+jass/install-zshrc.sh
 ```
 
 `jass` uses `pass` to store secrets. You have to first have an active [pass environment](https://www.passwordstore.org/).
