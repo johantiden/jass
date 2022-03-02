@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+set -e
+
+CMD="${1}"
+
+function require {
+    if ! command -v "${1}" &> /dev/null; then
+        echo "secret requires '${1}' to be installed. Please install it first! See ${2}"
+        exit
+    fi
+}
+
+require pass "https://www.passwordstore.org/"
+require jq "https://stedolan.github.io/jq/"
+
+function usage {
+    echo "Usage:"
+    echo "TODO"
+}
+
+function jass-get {
+    #>&2 echo "jass" "${@}"
+    local PASSPATH="${1}"
+
+    JSON=$(pass "${PASSPATH}" | tail +2)
+
+    echo "${JSON}" |\
+        jq -r "${@:2}"
+}
+
+function jass-insert {
+    local PASSPATH="${1}"
+
+    if [[ "${PASSPATH}" == "" ]]; then
+        read -p 'path: ' PASSPATH
+    fi
+    #echo "PASSPATH: ${PASSPATH}"
+
+    read -sp 'pass: ' PASS
+
+    echo ""
+    
+    {
+        echo "${PASS}"
+        echo "{}"
+
+    } | pass insert -fm "${PASSPATH}" &> /dev/null
+
+   jass-put "${PASSPATH}" "pass" "${PASS}"
+}
+
+function jass-put {
+    local PASSPATH="${1}"
+    local KEY="${2}"
+    local VALUE="${3}"
+
+    local PASS=$(pass "${PASSPATH}" | head -n1) # TODO: only call pass once because it is slow
+    local OLD_JSON=$(pass "${PASSPATH}" | tail +2) # TODO: only call pass once because it is slow
+
+    #echo "KEY: ${KEY}"
+    #echo "VALUE: ${VALUE}"
+
+    #echo "Old json:"
+    #echo "${OLD_JSON}"
+
+    {
+        echo "${PASS}"
+        # https://gist.github.com/joar/776b7d176196592ed5d8
+        echo "${OLD_JSON}" | jq --arg new ${VALUE} ". + {${KEY}: \$new}"
+    }  | pass insert -fm "${PASSPATH}" &> /dev/null
+
+
+    #echo "New json:"
+    #jass "${PASSPATH}"
+}
+
+if [[ "${CMD}" == "" ]]; then
+    usage
+elif [[ "${CMD}" == "insert" ]]; then
+    jass-insert "${@:2}"
+elif [[ "${CMD}" == "put" ]]; then
+    jass-put "${@:2}"
+else
+    jass-get "${@}"
+fi
+
+

@@ -1,12 +1,47 @@
-# secret - yet another formatter for pass
+# jass - [json](https://stedolan.github.io/jq/) [pass](https://www.passwordstore.org/)
+Utility to get nicely formatted pass files
 
-## Gettings started
+
+## File format
+The whole reason for `jass`' existence is to help get a standardised format across the `pass` repo.
+
+Files are structured with the first line being the password. This is to allow interoperability with other tools.
+Line 2 and below is formatted as json which specifies key/values. Note that the password should also be put in the json object.
+`jass` helps you to always insert a password and an empty json object.
+From line 2 and on, any json-compliant data can be added (using `pass edit pass-name`) or by using `jass put pass-name KEY VALUE `
+
+
+You can fetch the whole file using `pass` directly. 
+Notice the first line _and_ the json having the pass:
+```
+$ pass hello-secret
+mypassword
+{
+  "pass": "mypassword",
+  "user": "johantiden",
+  "url": "http://example.com"
+}
+```
+
+Or fetch specific values using `secret`
+```
+$ pass anotherentry
+anotherpassword
+user: anotheruser
+url: http://anotherurl.example.com
+$ secret anotherentry url
+http://anotherurl.example.com
+```
+
+
+## Getting started
 ### Dependencies
-secret depends on 
-[pass](https://www.passwordstore.org/),
-[jq](https://stedolan.github.io/jq/) and 
-[rq](https://github.com/dflemstr/rq/blob/master/doc/installation.md), 
-install them first! 
+jass depends on
+[pass](https://www.passwordstore.org/) and
+[jq](https://stedolan.github.io/jq/)
+install them first!
+
+This project is not meant to replace either jq nor pass. It is in fact highly encouraged to use them together with jass.
 
 ### Installation
 ```
@@ -20,61 +55,58 @@ secret/install-bashrc.sh
 secret/install-zshrc.sh
 ```
 
-
-
-## Usage
-`secret` uses `pass` to store secrets. You have to first have an active `pass` environment. 
+`jass` uses `pass` to store secrets. You have to first have an active [pass environment](https://www.passwordstore.org/).
 
 ```
 pass init
 ```
 
+## Usage
+Using jass is similar to using pass. Most commands require a `pass-name`. 
+
 ### Insert
-This will interactively ask you for credentials strongly recommended!
+This will interactively ask you for a password. This will replace any existing object without warning!
 ```
-secret insert hello-secret
-```
-
-You can also insert all arguments at once (use with care!)
-```
-secret insert hello-secret2 myuser mypassword
+$ jass insert hello-secret
+pass: *********
 ```
 
+### Put
+Put more data into the same pass entry
+```
+jass put hello-secret user johantiden
+jass put hello-secret url "http://example.com"
+```
 
 ### Get
-Get your secrets by calling `secret` with the path of the pass file and the key of the field e.g.
+Get your secrets by calling `jass` with the `pass-name`.
+and optionally a jq-selector. Any parameters after the `pass-name` will be considered arguments to `jq`.
+
 
 ```
-$ secret hello-secret2 pass
+$ jass hello-secret
+{
+  "pass": "mypassword",
+  "user": "johantiden",
+  "url": "http://example.com"
+}
+```
+
+Use jq to fetch separate fields:
+```
+$ jass hello-secret | jq -r .pass
 mypassword
-$ secret hello-secret2 user
-myuser
 ```
-
-## File format
-The whole reason for `secret` to exist is to get a standardised format across the `pass` repo.
-
-Files are structured with the first line being the password. This is to allow interoperability with other tools.
-Line 2 and below is formatted as yml which specifies key: value freely. 
-`secret` helps you to always insert a password and a "user" field.
-From line 2 and on, any yml-compliant data can be added (using `pass edit`) 
-
-TODO: Add a simple helper to add fields, or config for what fields to ask for in interactive mode.
-
-You can fetch the whole file using `pass` directly or
+or use some sugar for the above
 ```
-$ secret insert hello-secret2 myuser mypassword
-$ pass hello-secret2
+$ jass hello-secret .pass
 mypassword
-user: myuser
 ```
 
-Or fetch specific values using `secret` 
+You can fetch multiple fields at once if you want:
 ```
-$ pass anotherentry
-anotherpassword
-user: anotheruser
-url: http://anotherurl.example.com
-$ secret anotherentry url
-http://anotherurl.example.com
+$ jass hello-secret ".url, .user" 
+http://example.com
+johantiden
 ```
+
