@@ -15,7 +15,7 @@ require jq "https://stedolan.github.io/jq/"
 
 function usage {
     echo "Usage:"
-    echo "TODO"
+    echo "TODO (see README.md instead)"
 }
 
 function jass-get {
