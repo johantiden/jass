@@ -36,6 +36,10 @@ $ jass hello-secret
   "user": "johantiden",
   "url": "http://example.com"
 }
+
+$ jass hello-secret | jq '"\(.user):\(.pass)"'
+"johantiden:mypassword"
+
 ```
 
 
